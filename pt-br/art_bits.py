@@ -42,7 +42,15 @@ class bit(object):#tratamento do desenho
             elif self.coluna % 2 == 1: meio = int(self.coluna / 2)+1
         #base de linhas
         try:
-            pass
+            meio = int(meio)
+            self.limpo()
+            
+            pontos = input('digite os pontos -linha e coluna-: ')
+            
+            pontos = pontos.split(',')
+            for i in range(pontos[0],meio):
+                pass
+            
             
         except:
             print('você não digitou um número')
@@ -62,6 +70,8 @@ class bit(object):#tratamento do desenho
         
     def __str__(self):#manual 
         return 'foobarr é bom'
+    def limpo(self):
+        return os.system('cls')
         
         
 while True:
