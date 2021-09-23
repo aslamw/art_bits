@@ -12,7 +12,10 @@ class bit(object):#tratamento do desenho
         self.linha = linha
         self.coluna = coluna
         self.espaco = ''
-        self.key = {'manual':'print(self.__str__())'}#comandos
+        self.key = {'manual':'print(self.__str__())',
+                    'espelho':'self.espelho()'
+                    
+                    }#comandos
         
     def desenho(self):
         #fazer os desenhos--------------------------------
@@ -37,24 +40,21 @@ class bit(object):#tratamento do desenho
         meio = input('digite a coluna que quer o espelhamento')
         if meio == 'n':
             
-            if self.coluna % 2 == 0: meio = (self.coluna / 2)+1
+            if self.coluna % 2 == 0: meio = int((self.coluna / 2)+1)
             
-            elif self.coluna % 2 == 1: meio = int(self.coluna / 2)+1
+            elif self.coluna % 2 == 1: meio = int((self.coluna / 2)+1)
+            print(meio) #apagar xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
         #base de linhas
-        try:
-            meio = int(meio)
-            self.limpo()
+        
+        meio = int(meio)#mudar !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        self.limpo()
             
-            pontos = input('digite os pontos -linha e coluna-: ')
-            
-            pontos = pontos.split(',')
-            for i in range(pontos[0],meio):
-                pass
-            
-            
-        except:
-            print('você não digitou um número')
-            
+        pontoL = int(input('digite -linha-'))
+        pontoN = int(input('digite -coluna-'))
+        
+        for i in range(pontoN,meio):
+            self.matrix[pontoL][i] = 1
+            self.campo()
         
     def campo(self):
         #cria o espaço no campo-------------------------
@@ -64,11 +64,11 @@ class bit(object):#tratamento do desenho
             for o in range(0,len(self.matrix[i])):
                 if self.matrix[i][o] == 0:self.espaco += ' '        
             
-                else: self.espaco += ' @'        
+                else: self.espaco += ' @'
         print(self.espaco)#apresentação
         self.desenho()
         
-    def __str__(self):#manual 
+    def __str__(self):#manual---------------------------------
         return 'foobarr é bom'
     def limpo(self):
         return os.system('cls')
@@ -85,7 +85,7 @@ while True:
     if matrizL > 50:matrizL = 50
     if matrizC > 20: matrizC = 20
     
-    matrix = numpy.ones(shape=(matrizL,matrizC))#cria a matrix
+    matrix = numpy.zeros(shape=(matrizL,matrizC))#cria a matrix
     matrix = matrix.astype(int)
     
     art = bit(matrix,matrizL,matrizC).campo()
