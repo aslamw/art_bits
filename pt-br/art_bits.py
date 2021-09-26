@@ -13,14 +13,12 @@ class bit(object):#tratamento do desenho
         self.coluna = coluna
         self.espaco = ''
         self.key = {'manual':'print(self.__str__())',
-                    'espelho':'self.espelho()'
+                    'espelho':'self.espelho()','matrix':'print(self.matrix)'
                     
                     }#comandos
         
     def desenho(self):
         #fazer os desenhos--------------------------------
-        os.system('cls')
-        os.system('color 2')
         print('modele o futuro')
         
         while 1:
@@ -29,45 +27,53 @@ class bit(object):#tratamento do desenho
             
             elif escolha == 'x': break#fim do loop
             
-            elif escolha == 'visual': print(self.espaco)
+            elif escolha == 'visual': print(self.campo())
                 
             elif escolha == 'lixo': os.system('cls')
             
             else:print('esse camando não é valido')
             
     def espelho(self):
-        #define a linha do meio--------
-        meio = input('digite a coluna que quer o espelhamento')
-        if meio == 'n':
+        #define a linha do meio-----------------------
+        while 1:
+            pontoN = input('digite a linha ou coluna limite -EX.: L 3--')
+            if pontoN == 'x':break
             
-            if self.coluna % 2 == 0: meio = int((self.coluna / 2)+1)
+            pontoL = int(input('digite -linha-'))
+            pontoC = int(input('digite -coluna-'))
+            pontoN = pontoN.split()
+            pontoN[1]=int(pontoN[1])
             
-            elif self.coluna % 2 == 1: meio = int((self.coluna / 2)+1)
-            print(meio) #apagar xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-        #base de linhas
-        
-        meio = int(meio)#mudar !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        self.limpo()
+            if pontoN[0] == 'L':
+                if pontoN[1] > pontoL:
+                    for i in range(pontoL,pontoN[1]): self.matrix[i][pontoC] = 0
+                                   
+                else:
+                    for i in range(pontoN[1],pontoL): self.matrix[i][pontoC] = 0
+                
             
-        pontoL = int(input('digite -linha-'))
-        pontoN = int(input('digite -coluna-'))
-        
-        for i in range(pontoN,meio):
-            self.matrix[pontoL][i] = 1
-            self.campo()
-        
+            elif pontoN[0] == 'C':
+                if pontoN[1] > pontoC:
+                    for i in range(pontoC,pontoN[1]): self.matrix[pontoL][i] = 0
+                                   
+                else:
+                    for i in range(pontoN[1],pontoC): self.matrix[pontoL][i] = 0
+            
+            print(pontoN) #apagar xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
     def campo(self):
         #cria o espaço no campo-------------------------
-        for i in range(0,len(self.matrix)):
+        for i in range(self.coluna):
+            print(i)#apagar############################################
             
             self.espaco += '\n'
-            for o in range(0,len(self.matrix[i])):
+            for o in range(self.linha):
+                print(o)#apagar########################################
                 if self.matrix[i][o] == 0:self.espaco += ' '        
             
                 else: self.espaco += ' @'
         print(self.espaco)#apresentação
-        self.desenho()
-        
+
     def __str__(self):#manual---------------------------------
         return 'foobarr é bom'
     def limpo(self):
@@ -85,7 +91,9 @@ while True:
     if matrizL > 50:matrizL = 50
     if matrizC > 20: matrizC = 20
     
-    matrix = numpy.zeros(shape=(matrizL,matrizC))#cria a matrix
+    matrix = numpy.ones(shape=(matrizL,matrizC))#cria a matrix
     matrix = matrix.astype(int)
     
-    art = bit(matrix,matrizL,matrizC).campo()
+    art = bit(matrix,matrizL,matrizC)
+    art.campo()
+    art.desenho()
