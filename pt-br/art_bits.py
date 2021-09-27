@@ -13,8 +13,9 @@ class bit(object):#tratamento do desenho
         self.coluna = coluna
         self.espaco = ''
         self.key = {'manual':'print(self.__str__())',
-                    'espelho':'self.espelho()','matrix':'print(self.matrix)'
-                    
+                    'espelho':'self.espelho()','matrix':'print(self.matrix)',
+                    'linha':'print(self.linha)','coluna':'print(self.coluna)',
+                    'espaço':'print(self.espaco)','Uni':'self.uni()'
                     }#comandos
         
     def desenho(self):
@@ -33,6 +34,17 @@ class bit(object):#tratamento do desenho
             
             else:print('esse camando não é valido')
             
+    def uni(self):
+        try:
+            while 1:
+                linha = int(input('L_> '))
+                coluna = int(input('C_> '))
+                self.campo()
+                
+                self.matrix[linha][coluna] = 0 
+        except:
+            self.desenho()
+            
     def espelho(self):
         #define a linha do meio-----------------------
         while 1:
@@ -49,8 +61,7 @@ class bit(object):#tratamento do desenho
                     for i in range(pontoL,pontoN[1]): self.matrix[i][pontoC] = 0
                                    
                 else:
-                    for i in range(pontoN[1],pontoL): self.matrix[i][pontoC] = 0
-                
+                    for i in range(pontoN[1],pontoL): self.matrix[i][pontoC] = 0        
             
             elif pontoN[0] == 'C':
                 if pontoN[1] > pontoC:
@@ -58,18 +69,15 @@ class bit(object):#tratamento do desenho
                                    
                 else:
                     for i in range(pontoN[1],pontoC): self.matrix[pontoL][i] = 0
-            
-            print(pontoN) #apagar xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
     def campo(self):
         #cria o espaço no campo-------------------------
-        for i in range(self.coluna):
-            print(i)#apagar############################################
+        self.espaco = ''#limpesa de campo
+        for i in range(self.linha):
             
             self.espaco += '\n'
-            for o in range(self.linha):
-                print(o)#apagar########################################
-                if self.matrix[i][o] == 0:self.espaco += ' '        
+            for o in range(self.coluna):
+                if self.matrix[i][o] == 0:self.espaco += '  '        
             
                 else: self.espaco += ' @'
         print(self.espaco)#apresentação
