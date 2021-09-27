@@ -13,12 +13,13 @@ class bit(object):#tratamento do desenho
         self.coluna = coluna
         self.espaco = ''
         self.key = {'manual':'print(self.__str__())',
-                    'espelho':'self.espelho()','matrix':'print(self.matrix)',
+                    'lin':'self.lin()','matrix':'print(self.matrix)',
                     'linha':'print(self.linha)','coluna':'print(self.coluna)',
-                    'espaço':'print(self.espaco)','Uni':'self.uni()'
+                    'espaço':'print(self.espaco)','uni':'self.uni()',
+                    'clear':'self.limpo()'
                     }#comandos
         
-    def desenho(self):
+    def comandos(self):
         #fazer os desenhos--------------------------------
         print('modele o futuro')
         
@@ -29,8 +30,6 @@ class bit(object):#tratamento do desenho
             elif escolha == 'x': break#fim do loop
             
             elif escolha == 'visual': print(self.campo())
-                
-            elif escolha == 'lixo': os.system('cls')
             
             else:print('esse camando não é valido')
             
@@ -43,9 +42,9 @@ class bit(object):#tratamento do desenho
                 
                 self.matrix[linha][coluna] = 0 
         except:
-            self.desenho()
+            self.comandos()
             
-    def espelho(self):
+    def lin(self):
         #define a linha do meio-----------------------
         while 1:
             pontoN = input('digite a linha ou coluna limite -EX.: L 3--')
@@ -104,4 +103,4 @@ while True:
     
     art = bit(matrix,matrizL,matrizC)
     art.campo()
-    art.desenho()
+    art.comandos()
