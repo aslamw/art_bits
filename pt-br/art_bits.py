@@ -7,18 +7,21 @@ Created on Thu Sep 16 17:20:56 2021
 import numpy,os
 
 class bit(object):#tratamento do desenho
-    def __init__(self,matrix,linha,coluna): 
-        self.matrix = matrix
+    def __init__(self,matriz,linha,coluna): 
+        self.matriz = matriz
         self.linha = linha
         self.coluna = coluna
+        self.desenho_Uni = []
+        self.desenho_Lin = []
         self.espaco = ''
         self.esqueleto = ''
         self.key = {'manual':'print(self.__str__())',
-                    'lin':'self.lin()','matriz':'print(self.matrix)',
+                    'lin':'self.lin()','matriz':'print(self.matriz)',
                     'linha':'print(self.linha)','coluna':'print(self.coluna)',
                     'H':'print(self.espaco)','uni':'self.uni()',
                     'clear':'self.limpo()','esqueleto':'print(self.esqueleto)',
-                    'visual':'print(self.espaco)','uni -r':'self.uni(0)'
+                    'visual':'print(self.espaco)','uni -r':'self.uni(0)',
+                    'salvar':'self.salvar()'
                     }#comandos
         
     def comandos(self):
@@ -40,7 +43,10 @@ class bit(object):#tratamento do desenho
                 linha = int(input('Linha_> '))
                 coluna = int(input('Coluna_> '))
                 
-                self.matrix[linha][coluna] = n
+                self.matriz[linha][coluna] = n
+
+                #salva os comandos
+                self.desenho_Uni.append(f'U{str(linha)}.{str(coluna)}_')
                 
                 self.campo()
         except:
@@ -54,23 +60,26 @@ class bit(object):#tratamento do desenho
             
             pontoL = int(input('digite -linha-> '))
             pontoC = int(input('digite -coluna-> '))
+
+            #salvar comandos -----------------------
+            self.desenho_Lin.append(f'{pontoN}.{str(pontoL)}.{str(pontoC)}_')
             
             pontoN = pontoN.split()
             pontoN[1]=int(pontoN[1])
             
             if pontoN[0] == 'L':#modelo por linha
                 if pontoN[1] > pontoL:
-                    for i in range(pontoL,pontoN[1]): self.matrix[i][pontoC] = n
+                    for i in range(pontoL,(pontoN[1]+1)): self.matriz[i][pontoC] = n
                     
                 else:
-                    for i in range(pontoN[1],pontoL): self.matrix[i][pontoC] = n
+                    for i in range(pontoN[1],(pontoL+1)): self.matriz[i][pontoC] = n
             
             elif pontoN[0] == 'C':#modelo por coluna
                 if pontoN[1] > pontoC:
-                    for i in range(pontoC,pontoN[1]): self.matrix[pontoL][i] = n
+                    for i in range(pontoC,(pontoN[1]+1)): self.matriz[pontoL][i] = n
                                    
                 else:
-                    for i in range(pontoN[1],pontoC): self.matrix[pontoL][i] = n
+                    for i in range(pontoN[1],(pontoC + 1)): self.matriz[pontoL][i] = n
             self.campo()
 
     def campo(self):
@@ -82,7 +91,7 @@ class bit(object):#tratamento do desenho
             self.espaco += '\n'
             self.esqueleto += '\n' + f'{i} : '
             for o in range(self.coluna):
-                if self.matrix[i][o] == 0:self.espaco += '  '        
+                if self.matriz[i][o] == 0:self.espaco += '  '        
                 
                 else: self.espaco += ' @'
                 self.esqueleto += str(o) + ' |'
@@ -109,25 +118,87 @@ class bit(object):#tratamento do desenho
                   
                   Oque está a esquerda de * : * é contado como linha e
                   tudo a direita é coluna.
-            ''' 
-    def limpo(self):
-        return os.system('cls')          
+            '''          
+    def salvar(self):#para salvar---------------------------------------
+            with open('teste.dll','w') as o: 
+                o.write(f'@{self.linha}.{self.coluna}-{Lin}-{Uni}')      
       
 while True:
     #tamanho do campo
-    try:
+    #try:
+    comando = input('deseja matriz já salva ou nova')
+
+    if comando == 'nova':
         matrizL = int(input('digite linhas da matriz --limite 50--: '))    
         matrizC = int(input('digite colunas da matriz --limite 20--: '))
-    
-        #ajuste de limite
+        
+            #ajuste de limite
         if matrizL > 50:matrizL = 50
         if matrizC > 20: matrizC = 20
-        
-        matrix = numpy.zeros(shape=(matrizL,matrizC))#cria a matrix
-        matrix = matrix.astype(int)
-        
-        art = bit(matrix,matrizL,matrizC)
+            
+        matriz = numpy.zeros(shape=(matrizL,matrizC))#cria a matriz
+        matriz = matriz.astype(int)
+            
+        art = bit(matriz,matrizL,matrizC)
         art.campo()
         art.comandos()
-    except:
-        break
+
+    elif comando == 'salvo':
+        #tratamento dos dados salvos
+        local = input('digite diretorio e o nome do arquivo desejado:>_ ')
+        with open(f'{comando}.dll') as o:
+            dados = o.read()
+            
+        dados = dados.split('@')
+        dados = dados.split('_')
+
+        #base matriz
+        matrizU = dados.split('-')
+        matriz = matrizU[0].split('.')
+
+        #base desenho
+
+        matriz = numpy.zeros(shape=(matriz[0],matriz[1]))#cria a matriz
+        matriz = matriz.astype(int)
+
+        #organifar os dados
+        for i in range(len(matrizU):
+            #desenho Uni-----------------------------------
+            if 'U' in matrizU[i]:
+                numero = matrizU[i].replace('U','')
+                numero = numero.split(',')
+
+                #desenho
+                matriz[int(numero[0])][int(numero[1])] = 1
+
+            #desenho Lin-----------------------------------    
+            elif 'L' or 'C' in matrizU[i]:
+                base = matrizU[i].split('.')
+                pontN = base[0]
+                pontoL = int(base[1])
+                pontoC = int(base[2])
+
+
+                if pontoN[0] == 'L':#modelo por linha
+                    if int(pontoN[2]) > pontoL:
+                        for i in range(pontoL,(int(pontoN[2])+1)): matriz[i][pontoC] = 1
+                        
+                    else:
+                        for i in range(int(pontoN[2]),(pontoL+1)): matriz[i][pontoC] = 1
+                
+                elif pontoN[0] == 'C':#modelo por coluna
+                    if int(pontoN[2]) > pontoC:
+                        for i in range(pontoC,(int(pontoN[2])+1)): matriz[pontoL][i] = 1
+                                       
+                    else:
+                        for i in range(int(pontoN[2]),(pontoC+1)): matriz[pontoL][i] = 1
+
+    else:break
+
+    art = bit(matriz,matriz[0],matriz[1])
+    art.campo()
+    art.comandos()
+
+    else: print('comando invalido')       
+    #except:
+        #break
