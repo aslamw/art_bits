@@ -4,15 +4,13 @@ Created on Thu Sep 16 17:20:56 2021
 
 @author: aslam
 """
-import numpy,os
+import numpy
 
 class bit(object):#tratamento do desenho
     def __init__(self,matriz,linha,coluna): 
         self.matriz = matriz
         self.linha = linha
         self.coluna = coluna
-        self.desenho_Uni = []
-        self.desenho_Lin = []
         self.espaco = ''
         self.esqueleto = ''
         self.key = {'manual':'print(self.__str__())',
@@ -20,7 +18,7 @@ class bit(object):#tratamento do desenho
                     'linha':'print(self.linha)','coluna':'print(self.coluna)',
                     'H':'print(self.espaco)','uni':'self.uni()',
                     'clear':'self.limpo()','esqueleto':'print(self.esqueleto)',
-                    'visual':'print(self.espaco)','uni -r':'self.uni(0)',
+                    'visual':'print(self.campo())','uni -r':'self.uni(0)',
                     'salvar':'self.salvar()'
                     }#comandos
         
@@ -33,24 +31,20 @@ class bit(object):#tratamento do desenho
             
             if escolha in self.key: eval(f'{self.key[escolha]}')#tratamento de comandos
             
-            elif escolha == 'x': break#fim do loop
+            elif escolha == 'x': exit()#fim do loop
             
             else:print('esse camando não é valido')
             
     def uni(self,n=1):
-        try:
-            while 1:
+        while 1:
+            try:
                 linha = int(input('Linha_> '))
                 coluna = int(input('Coluna_> '))
-                
+                    
                 self.matriz[linha][coluna] = n
-
-                #salva os comandos
-                self.desenho_Uni.append(f'U{str(linha)}.{str(coluna)}_')
                 
-                self.campo()
-        except:
-            self.comandos()
+            except:
+                self.comandos()
             
     def lin(self,n=1):
         #define a linha do meio-----------------------
@@ -60,9 +54,6 @@ class bit(object):#tratamento do desenho
             
             pontoL = int(input('digite -linha-> '))
             pontoC = int(input('digite -coluna-> '))
-
-            #salvar comandos -----------------------
-            self.desenho_Lin.append(f'{pontoN}.{str(pontoL)}.{str(pontoC)}_')
             
             pontoN = pontoN.split()
             pontoN[1]=int(pontoN[1])
@@ -95,6 +86,7 @@ class bit(object):#tratamento do desenho
                 
                 else: self.espaco += ' @'
                 self.esqueleto += str(o) + ' |'
+        print(self.espaco)
 
     def __str__(self):#manual---------------------------------
         return f'''
@@ -120,13 +112,20 @@ class bit(object):#tratamento do desenho
                   tudo a direita é coluna.
             '''          
     def salvar(self):#para salvar---------------------------------------
-            with open('teste.dll','w') as o: 
-                o.write(f'@{self.linha}.{self.coluna}-{Lin}-{Uni}')      
+        
+        posicao = ''
+        for i in range(self.linha):
+            for o in range(self.coluna):
+                if self.matriz[i][o] == 1:  posicao += f'{i}/{o},'
+    
+        nome = input('nome do arquivo: ')
+        with open(f'{nome}.dll','w') as o: 
+            o.write(f'{self.linha}.{self.coluna}-{posicao}')
       
 while True:
     #tamanho do campo
     #try:
-    comando = input('deseja matriz já salva ou nova')
+    comando = input('deseja matriz já salvo ou nova_>')
 
     if comando == 'nova':
         matrizL = int(input('digite linhas da matriz --limite 50--: '))    
@@ -146,59 +145,27 @@ while True:
     elif comando == 'salvo':
         #tratamento dos dados salvos
         local = input('digite diretorio e o nome do arquivo desejado:>_ ')
-        with open(f'{comando}.dll') as o:
+        with open(f'{local}.dll') as o:
             dados = o.read()
-            
-        dados = dados.split('@')
-        dados = dados.split('_')
+        
+        #divisão dos dados
+        dados = dados.split('-')
+        dados1 = dados[0].split('.')
 
-        #base matriz
-        matrizU = dados.split('-')
-        matriz = matrizU[0].split('.')
 
         #base desenho
 
-        matriz = numpy.zeros(shape=(matriz[0],matriz[1]))#cria a matriz
+        matriz = numpy.zeros(shape=(int(dados1[0]),int(dados1[1])))#cria a matriz
         matriz = matriz.astype(int)
-
-        #organifar os dados
-        for i in range(len(matrizU):
-            #desenho Uni-----------------------------------
-            if 'U' in matrizU[i]:
-                numero = matrizU[i].replace('U','')
-                numero = numero.split(',')
-
-                #desenho
-                matriz[int(numero[0])][int(numero[1])] = 1
-
-            #desenho Lin-----------------------------------    
-            elif 'L' or 'C' in matrizU[i]:
-                base = matrizU[i].split('.')
-                pontN = base[0]
-                pontoL = int(base[1])
-                pontoC = int(base[2])
-
-
-                if pontoN[0] == 'L':#modelo por linha
-                    if int(pontoN[2]) > pontoL:
-                        for i in range(pontoL,(int(pontoN[2])+1)): matriz[i][pontoC] = 1
-                        
-                    else:
-                        for i in range(int(pontoN[2]),(pontoL+1)): matriz[i][pontoC] = 1
+        
+        dados2 = dados[1].split(',')
+        for i in range(len(dados2)-1):
+            parte = dados2[i].split('/')
+            
+            matriz[int(parte[0])][int(parte[1])] = 1
                 
-                elif pontoN[0] == 'C':#modelo por coluna
-                    if int(pontoN[2]) > pontoC:
-                        for i in range(pontoC,(int(pontoN[2])+1)): matriz[pontoL][i] = 1
-                                       
-                    else:
-                        for i in range(int(pontoN[2]),(pontoC+1)): matriz[pontoL][i] = 1
-
-    else:break
-
-    art = bit(matriz,matriz[0],matriz[1])
+        
+    else: break 
+    art = bit(matriz,len(matriz),len(matriz[0]))
     art.campo()
     art.comandos()
-
-    else: print('comando invalido')       
-    #except:
-        #break
