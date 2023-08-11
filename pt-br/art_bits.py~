@@ -6,49 +6,52 @@ Created on Thu Sep 16 17:20:56 2021
 """
 import numpy
 
-class ArtBit:#tratamento do desenho
+class Art_bit(object):#tratamento do desenho
 
-    def __init__(self,linha=50,coluna=50): 
-        self.matriz = numpy.zeros(shape=(linha,coluna))#cria a matriz
+    def __init__(self,matriz,linha,coluna): 
+        self.matriz = matriz
         self.linha = linha
         self.coluna = coluna
         self.espaco = ''
         self.esqueleto = ''
             
-    def uni(self,linha,coluna):
+    def uni(self,n=1):
+        while 1:
+            try:
+                linha = int(input('Linha_> '))
+                coluna = int(input('Coluna_> '))
+                    
+                self.matriz[linha][coluna] = n
+                
+            except:
+                self.comandos()
             
-        self.matriz[linha][coluna] = 1
-            
-    def lin(self,ponto_f,linha,coluna):
+    def lin(self,n=1):
         #define a linha do meio-----------------------
-        
-        pontoN = ponto_f.split()
-        pontoN[1]=int(pontoN[1])
-        
-        if pontoN[0] == 'L':#modelo por linha
+        while 1:
+            pontoN = input('digite a linha L ou coluna C __-EX.: L 3--> ')
+            if pontoN == 'x':break
             
-            if pontoN[1] > linha:
-                
-                for i in range(linha,(pontoN[1]+1)):
-                    
-                    self.matriz[i][coluna] = 1
-                
-            else:
-                for i in range(pontoN[1],(pontoL+1)):
-                    self.matriz[i][coluna] = 1
-        
-        elif pontoN[0] == 'C':#modelo por coluna
+            pontoL = int(input('digite -linha-> '))
+            pontoC = int(input('digite -coluna-> '))
             
-            if pontoN[1] > coluna:
-                
-                for i in range(coluna,(pontoN[1]+1)):
-                    self.matriz[linha][i] = 1
-                               
-            else:
-                
-                for i in range(pontoN[1],(coluna + 1)):
+            pontoN = pontoN.split()
+            pontoN[1]=int(pontoN[1])
+            
+            if pontoN[0] == 'L':#modelo por linha
+                if pontoN[1] > pontoL:
+                    for i in range(pontoL,(pontoN[1]+1)): self.matriz[i][pontoC] = n
                     
-                    self.matriz[linha][i] = 1
+                else:
+                    for i in range(pontoN[1],(pontoL+1)): self.matriz[i][pontoC] = n
+            
+            elif pontoN[0] == 'C':#modelo por coluna
+                if pontoN[1] > pontoC:
+                    for i in range(pontoC,(pontoN[1]+1)): self.matriz[pontoL][i] = n
+                                   
+                else:
+                    for i in range(pontoN[1],(pontoC + 1)): self.matriz[pontoL][i] = n
+            self.campo()
 
     def campo(self):
         #cria o espaço no campo-------------------------
@@ -65,47 +68,6 @@ class ArtBit:#tratamento do desenho
                 self.esqueleto += str(o) + ' |'
         print(self.espaco)
 
-        
-    def salvar(self):#para salvar---------------------------------------
-        
-        posicao = ''
-        for i in range(self.linha):
-            for o in range(self.coluna):
-                if self.matriz[i][o] == 1:  posicao += f'{i}/{o},'
-    
-        nome = input('nome do arquivo: ')
-        with open(f'{nome}.dll','w') as o: 
-            o.write(f'{self.linha}.{self.coluna}-{posicao}')
-            
-    
-    def open_date(self,file):
-    
-        with open(f'{file}', 'r') as data_file:         
-            dados = data_file.read()
-    
-        #divisão dos dados
-        dados = dados.split('-')
-        dados1 = dados[0].split('.')
-
-
-        	#base desenho
-            
-        self.coluna = int(dados1[1])
-        self.linha = int(dados1[0])
-
-        self.matriz = numpy.zeros(shape=(int(dados1[0]),int(dados1[1])))#cria a matriz
-        
-        dados2 = dados[1].split(',')
-        
-        for i in range(len(dados2)-1):
-            parte = dados2[i].split('/')
-            
-            self.matriz[int(parte[0])][int(parte[1])] = 1
-            
-        
-        
-        
-        
     def __str__(self):#manual---------------------------------
         return f'''
                                 ---------Comandos-------------
@@ -128,11 +90,23 @@ class ArtBit:#tratamento do desenho
                   
                   Oque está a esquerda de * : * é contado como linha e
                   tudo a direita é coluna.
-            '''  
+            '''          
+    def salvar(self):#para salvar---------------------------------------
+        
+        posicao = ''
+        for i in range(self.linha):
+            for o in range(self.coluna):
+                if self.matriz[i][o] == 1:  posicao += f'{i}/{o},'
+    
+        nome = input('nome do arquivo: ')
+        with open(f'{nome}.dll','w') as o: 
+            o.write(f'{self.linha}.{self.coluna}-{posicao}')
+
+    def open_date(date):
+
 
 if __name__ == "__main__":
-    pass
-    """while True:
+    while True:
         #tamanho do campo
         #try:
         comando = input('deseja matriz já salvo ou nova_>')
@@ -153,11 +127,9 @@ if __name__ == "__main__":
             art.comandos()
 
     	elif comando == 'salvo':
-            
-            #tratamento dos dados salvos
-            local = input('digite diretorio e o nome do arquivo desejado:>_ ')
-            with open(f'{local}.dll') as o:
-                
+        	#tratamento dos dados salvos
+        	local = input('digite diretorio e o nome do arquivo desejado:>_ ')
+        	with open(f'{local}.dll') as o:
             	dados = o.read()
         
         	#divisão dos dados
@@ -172,7 +144,7 @@ if __name__ == "__main__":
         
         	dados2 = dados[1].split(',')
         	for i in range(len(dados2)-1):
-            	    parte = dados2[i].split('/')
+            		parte = dados2[i].split('/')
             
             	matriz[int(parte[0])][int(parte[1])] = 1
                 
@@ -181,4 +153,4 @@ if __name__ == "__main__":
 
     	art = bit(matriz,len(matriz),len(matriz[0]))
     	art.campo()
-    	art.comandos()"""
+    	art.comandos()
