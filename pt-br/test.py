@@ -11,4 +11,6 @@ art.lin("C 11",5,6)
 
 #art.open_date("teste.dll")
 
+art.lin("C 11",1,8,0)
+
 art.campo()

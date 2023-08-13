@@ -15,11 +15,14 @@ class ArtBit:#tratamento do desenho
         self.espaco = ''
         self.esqueleto = ''
             
-    def uni(self,linha,coluna):
+    def uni(self,linha,coluna,estado=1):
             
-        self.matriz[linha][coluna] = 1
+        self.matriz[linha][coluna] = estado
             
-    def lin(self,ponto_f,linha,coluna):
+    def lin(self,ponto_f:str ,linha:int, coluna:int, estado:int =1):
+        """
+            lin(teste)
+        """
         #define a linha do meio-----------------------
         
         pontoN = ponto_f.split()
@@ -31,24 +34,24 @@ class ArtBit:#tratamento do desenho
                 
                 for i in range(linha,(pontoN[1]+1)):
                     
-                    self.matriz[i][coluna] = 1
+                    self.matriz[i][coluna] = estado
                 
             else:
                 for i in range(pontoN[1],(pontoL+1)):
-                    self.matriz[i][coluna] = 1
+                    self.matriz[i][coluna] = estado
         
         elif pontoN[0] == 'C':#modelo por coluna
             
             if pontoN[1] > coluna:
                 
                 for i in range(coluna,(pontoN[1]+1)):
-                    self.matriz[linha][i] = 1
+                    self.matriz[linha][i] = estado
                                
             else:
                 
                 for i in range(pontoN[1],(coluna + 1)):
                     
-                    self.matriz[linha][i] = 1
+                    self.matriz[linha][i] = estado
 
     def campo(self):
         #cria o espaço no campo-------------------------
