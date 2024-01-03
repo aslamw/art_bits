@@ -13,4 +13,6 @@ art.lin("C 11",5,6)
 
 art.lin("C 11",1,8,0)
 
+print( 0 in art.matriz)
+
 art.campo()
